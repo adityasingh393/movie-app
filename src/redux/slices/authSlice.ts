@@ -21,7 +21,6 @@ const authSlice = createSlice({
   reducers: {
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
-      localforage.setItem('user', action.payload);
     },
     clearUser: (state) => {
       state.user = null;
@@ -43,4 +42,5 @@ const authSlice = createSlice({
 });
 
 export const { setUser, clearUser, addFavorite, removeFavorite } = authSlice.actions;
+
 export default authSlice.reducer;

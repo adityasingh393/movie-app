@@ -13,7 +13,7 @@ const FavoritePage: React.FC = () => {
 
   const favoriteMovies = movies.filter(movie => user.favorites.includes(movie.imdbID));
 
-  return <MovieList movies={favoriteMovies} />;
+  return <MovieList movies={favoriteMovies} searchTerm="" />;
 };
 
 export default FavoritePage;

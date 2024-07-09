@@ -7,10 +7,16 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import FavoritePage from './pages/FavoritePage';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+// import { setUser } from './redux/slices/authSlice';
+// import localforage from 'localforage';
+import { useDispatch } from 'react-redux';
 
+import './App.css';
 const App: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  // const dispatch = useDispatch();
+
   return (
     <Provider store={store}>
       <Router>

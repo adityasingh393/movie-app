@@ -1,8 +1,10 @@
-// src/components/MovieList.tsx
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { addFavorite, removeFavorite } from '../redux/slices/authSlice';
+import { Card, CardContent, CardMedia, Typography, IconButton } from '@mui/material';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+ import './MovieList.css'; 
 
 interface MovieListProps {
   movies: Movie[];
@@ -14,6 +16,12 @@ interface Movie {
   Year: string;
   imdbID: string;
   Poster: string;
+  Plot?: string; 
+  Director:string;
+  Actors: string;
+  Released: string;
+  Runtime:string;
+  Genre:string;
 }
 
 const MovieList: React.FC<MovieListProps> = ({ movies, searchTerm }) => {
@@ -35,18 +43,39 @@ const MovieList: React.FC<MovieListProps> = ({ movies, searchTerm }) => {
   );
 
   return (
-    <div>
+    <div >
       {filteredMovies.map(movie => (
-        <div key={movie.imdbID}>
-          <h3>{movie.Title}</h3>
-          <p>{movie.Year}</p>
-          <img src={movie.Poster} alt={movie.Title} />
+        <Card key={movie.imdbID} className="movie-card">
+          <CardMedia
+            component="img"
+            alt={movie.Title}
+            image={movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/150'}
+            className="poster-conatiner"
+          />
+        <div className=' details-container'>
+        
+           <h2>
+
+              {movie.Title}
+           </h2>
+           <p>{movie.Plot}</p>
+                <p>Director: {movie.Director}</p>
+                <p>Actors: {movie.Actors}</p>
+                <p>Genre: {movie.Genre}</p>
+                <p>Released: {movie.Released}</p>
+                <p>Runtime: {movie.Runtime}</p>
+                
+                </div>
           {user && (
-            <button onClick={() => handleFavoriteToggle(movie.imdbID)}>
-              {user.favorites.includes(movie.imdbID) ? 'Remove from Favorites' : 'Add to Favorites'}
-            </button>
+           <button 
+              aria-label="toggle favorite"
+              onClick={() => handleFavoriteToggle(movie.imdbID)}
+              className="favorite-button"
+            >
+              <ThumbUpIcon color={user.favorites.includes(movie.imdbID) ? 'primary' : 'action'} />
+           </button>
           )}
-        </div>
+        </Card>
       ))}
     </div>
   );

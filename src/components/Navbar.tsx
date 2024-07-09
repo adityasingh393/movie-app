@@ -1,6 +1,5 @@
-// src/components/Navbar.tsx
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { clearUser } from '../redux/slices/authSlice';
@@ -13,26 +12,33 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ searchTerm, setSearchTerm }) => {
   const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch(clearUser());
+    navigate('/');
+  };
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
   };
 
   return (
-    <nav>
-      <Link to="/">Home</Link>
+    <nav className="navbar">
+      <button className="nav-button" onClick={() => handleNavigate('/')}>Home</button>
       {user ? (
         <>
-          <Link to="/favorites">Favorites</Link>
-          <button onClick={handleLogout}>Logout</button>
+          <button className="nav-button" onClick={() => handleNavigate('/favorites')}>Favorites</button>
+          <button className="nav-button" onClick={handleLogout}>Logout</button>
         </>
       ) : (
         <>
-          <Link to="/login">Login</Link>
-          <Link to="/signup">Signup</Link>
+          <button className="nav-button" onClick={() => handleNavigate('/login')}>Login</button>
+          <button className="nav-button" onClick={() => handleNavigate('/signup')}>Signup</button>
         </>
       )}
       <input
+        className="search-input"
         type="text"
         placeholder="Search for a movie..."
         value={searchTerm}

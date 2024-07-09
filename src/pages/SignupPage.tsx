@@ -7,15 +7,17 @@ interface SignupFormInputs {
   email: string;
   password: string;
 }
+
 interface User {
-    email: string;
-    password: string;
-    favorites: string[];
-  }
+  email: string;
+  password: string;
+  favorites: string[];
+}
 
 const SignupPage: React.FC = () => {
   const { register, handleSubmit } = useForm<SignupFormInputs>();
-const navigate=useNavigate();
+  const navigate = useNavigate();
+
   const onSubmit = async (data: SignupFormInputs) => {
     const existingUser = await localforage.getItem<User>(data.email);
     if (existingUser) {
@@ -29,10 +31,10 @@ const navigate=useNavigate();
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register('email')} type="email" placeholder="Email" required />
-      <input {...register('password')} type="password" placeholder="Password" required />
-      <button type="submit">Signup</button>
+    <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
+      <input className="input-field" {...register('email')} type="email" placeholder="Email" required />
+      <input className="input-field" {...register('password')} type="password" placeholder="Password" required />
+      <button className="auth-button" type="submit">Signup</button>
     </form>
   );
 };
