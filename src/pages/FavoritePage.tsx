@@ -11,9 +11,10 @@ const FavoritePage: React.FC = () => {
     return <p>Please log in to view your favorite movies.</p>;
   }
 
-  const favoriteMovies = movies.filter(movie => user.favorites.includes(movie.imdbID));
+    const favoriteMovies = movies.filter(movie => user.favorites.includes(movie.imdbID));
+  
+    return <MovieList movies={favoriteMovies} searchTerm="" />
 
-  return <MovieList movies={favoriteMovies} searchTerm="" />;
 };
 
 export default FavoritePage;

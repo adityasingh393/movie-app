@@ -1,10 +1,11 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/store';
 import { addFavorite, removeFavorite } from '../redux/slices/authSlice';
-import { Card, CardContent, CardMedia, Typography, IconButton } from '@mui/material';
+import { Card, CardContent, CardMedia, Typography, IconButton, Grid, Box } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
- import './MovieList.css'; 
+import Comment from './Comment';
 
 interface MovieListProps {
   movies: Movie[];
@@ -17,16 +18,18 @@ interface Movie {
   imdbID: string;
   Poster: string;
   Plot?: string; 
-  Director:string;
+  Director: string;
   Actors: string;
   Released: string;
-  Runtime:string;
-  Genre:string;
+  Runtime: string;
+  Genre: string;
+  imdbRating: string;
 }
 
 const MovieList: React.FC<MovieListProps> = ({ movies, searchTerm }) => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.user);
+  const navigate = useNavigate();
 
   const handleFavoriteToggle = (imdbID: string) => {
     if (user) {
@@ -38,46 +41,53 @@ const MovieList: React.FC<MovieListProps> = ({ movies, searchTerm }) => {
     }
   };
 
+  const handlePosterClick = (imdbID: string) => {
+    navigate(`/movie-details/${imdbID}`);
+  };
+
   const filteredMovies = movies.filter(movie =>
     movie.Title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div >
+    <Grid container spacing={3} justifyContent="center">
       {filteredMovies.map(movie => (
-        <Card key={movie.imdbID} className="movie-card">
-          <CardMedia
-            component="img"
-            alt={movie.Title}
-            image={movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/150'}
-            className="poster-conatiner"
-          />
-        <div className=' details-container'>
-        
-           <h2>
-
-              {movie.Title}
-           </h2>
-           <p>{movie.Plot}</p>
-                <p>Director: {movie.Director}</p>
-                <p>Actors: {movie.Actors}</p>
-                <p>Genre: {movie.Genre}</p>
-                <p>Released: {movie.Released}</p>
-                <p>Runtime: {movie.Runtime}</p>
-                
-                </div>
-          {user && (
-           <button 
-              aria-label="toggle favorite"
-              onClick={() => handleFavoriteToggle(movie.imdbID)}
-              className="favorite-button"
-            >
-              <ThumbUpIcon color={user.favorites.includes(movie.imdbID) ? 'primary' : 'action'} />
-           </button>
-          )}
-        </Card>
+        <Grid item key={movie.imdbID} xs={12} sm={6} md={4} lg={3}>
+          <Card className="movie-card">
+            <CardMedia
+              component="img"
+              alt={movie.Title}
+              image={movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/150'}
+              className="poster-container"
+              style={{ objectFit: 'contain', cursor: 'pointer' }} // Ensure full image is displayed and clickable
+              onClick={() => handlePosterClick(movie.imdbID)} // Navigate to MovieDetails on click
+            />
+            <CardContent>
+              <Typography variant="h6">{movie.Title}</Typography>
+              <Typography variant="body2" color="textSecondary">{movie.Plot}</Typography>
+              <Typography variant="body2" color="textSecondary">Director: {movie.Director}</Typography>
+              <Typography variant="body2" color="textSecondary">Actors: {movie.Actors}</Typography>
+              <Typography variant="body2" color="textSecondary">Genre: {movie.Genre}</Typography>
+              <Typography variant="body2" color="textSecondary">Released: {movie.Released}</Typography>
+              <Typography variant="body2" color="textSecondary">Runtime: {movie.Runtime}</Typography>
+              <Typography variant="body2" color="textSecondary">Rating: {movie.imdbRating}</Typography>
+            </CardContent>
+            {user && (
+              <Box display="flex" alignItems="center" justifyContent="space-between" padding="8px">
+                <IconButton
+                  aria-label="toggle favorite"
+                  onClick={() => handleFavoriteToggle(movie.imdbID)}
+                  className="favorite-button"
+                >
+                  <ThumbUpIcon color={user.favorites.includes(movie.imdbID) ? 'primary' : 'action'} />
+                </IconButton>
+                <Comment movieId={movie.imdbID} />
+              </Box>
+            )}
+          </Card>
+        </Grid>
       ))}
-    </div>
+    </Grid>
   );
 };
 

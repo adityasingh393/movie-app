@@ -1,10 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import localforage from 'localforage';
 
+interface Comment {
+  movieId: string;
+  text: string;
+}
+
 interface User {
   email: string;
   password: string;
   favorites: string[];
+  comments: Record<string, Comment[]>;
 }
 
 interface AuthState {
@@ -38,9 +44,18 @@ const authSlice = createSlice({
         localforage.setItem('user', state.user);
       }
     },
+    addComment: (state, action: PayloadAction<{ movieId: string; comment: string }>) => {
+      if (state.user) {
+        const { movieId, comment } = action.payload;
+        if (!state.user.comments[movieId]) {
+          state.user.comments[movieId] = [];
+        }
+        state.user.comments[movieId].push({ movieId, text: comment });
+        localforage.setItem('user', state.user);
+      }
+    }
   },
 });
 
-export const { setUser, clearUser, addFavorite, removeFavorite } = authSlice.actions;
-
+export const { setUser, clearUser, addFavorite, removeFavorite, addComment } = authSlice.actions;
 export default authSlice.reducer;

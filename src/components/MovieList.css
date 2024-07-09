@@ -1,4 +1,4 @@
-movie-card {
+/* movie-card {
   display: flex;
   align-items: flex-start;
   margin-bottom: 20px;
@@ -64,4 +64,4 @@ movie-card {
 
 .favorite-button.remove:hover {
   background-color: #c82333;
-}
+} */

@@ -3,6 +3,45 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
 import { clearUser } from '../redux/slices/authSlice';
+import { AppBar, Toolbar, Button, InputBase, Box, alpha, styled } from '@mui/material';
+
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(1),
+    width: 'auto',
+  },
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: '20ch',
+    },
+  },
+}));
 
 interface NavbarProps {
   searchTerm: string;
@@ -24,27 +63,31 @@ const Navbar: React.FC<NavbarProps> = ({ searchTerm, setSearchTerm }) => {
   };
 
   return (
-    <nav className="navbar">
-      <button className="nav-button" onClick={() => handleNavigate('/')}>Home</button>
-      {user ? (
-        <>
-          <button className="nav-button" onClick={() => handleNavigate('/favorites')}>Favorites</button>
-          <button className="nav-button" onClick={handleLogout}>Logout</button>
-        </>
-      ) : (
-        <>
-          <button className="nav-button" onClick={() => handleNavigate('/login')}>Login</button>
-          <button className="nav-button" onClick={() => handleNavigate('/signup')}>Signup</button>
-        </>
-      )}
-      <input
-        className="search-input"
-        type="text"
-        placeholder="Search for a movie..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-    </nav>
+    <AppBar position="static">
+      <Toolbar>
+        <Button color="inherit" onClick={() => handleNavigate('/')}>Home</Button>
+        {user ? (
+          <>
+            <Button color="inherit" onClick={() => handleNavigate('/favorites')}>Favs</Button>
+            <Button color="inherit" onClick={handleLogout}>Logout</Button>
+          </>
+        ) : (
+          <>
+            <Button color="inherit" onClick={() => handleNavigate('/login')}>Login</Button>
+            <Button color="inherit" onClick={() => handleNavigate('/signup')}>Signup</Button>
+          </>
+        )}
+        <Box sx={{ flexGrow: 1 }} />
+        <Search>
+          <StyledInputBase
+            placeholder="Search for a movie..."
+            inputProps={{ 'aria-label': 'search' }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </Search>
+      </Toolbar>
+    </AppBar>
   );
 };
 
