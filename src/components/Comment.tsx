@@ -12,25 +12,28 @@ const Comment: React.FC<CommentProps> = ({ movieId }) => {
   const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
 
-  const handlePostComment = () => {
-    if (comment.trim() && user) {
+  const handleCommentSubmit = () => {
+    if (user) {
       dispatch(addComment({ movieId, comment }));
       setComment('');
     }
   };
 
   return (
-    <div className="comment-section">
-      <textarea
+    <div className="comment-container">
+      <input
+        type="text"
         value={comment}
         onChange={(e) => setComment(e.target.value)}
-        placeholder="Write a comment..."
+        placeholder="Add a comment"
         className="comment-input"
-        disabled={!user}
       />
-      <button onClick={handlePostComment} className="comment-button" disabled={!user}>
-        Post Comment
-      </button>
+      <button onClick={handleCommentSubmit} className="comment-button">Submit</button>
+      {user && user.comments[movieId]?.map((c, index) => (
+        <div key={index} className="comment-text">
+          {c.text}
+        </div>
+      ))}
     </div>
   );
 };

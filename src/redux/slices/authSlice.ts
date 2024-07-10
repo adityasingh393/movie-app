@@ -6,11 +6,17 @@ interface Comment {
   text: string;
 }
 
+interface Rating {
+  movieId: string;
+  rating: number;
+}
+
 interface User {
   email: string;
   password: string;
   favorites: string[];
   comments: Record<string, Comment[]>;
+  ratings: Record<string, number>;
 }
 
 interface AuthState {
@@ -53,9 +59,16 @@ const authSlice = createSlice({
         state.user.comments[movieId].push({ movieId, text: comment });
         localforage.setItem('user', state.user);
       }
+    },
+    addRating: (state, action: PayloadAction<{ movieId: string; rating: number }>) => {
+      if (state.user) {
+        const { movieId, rating } = action.payload;
+        state.user.ratings[movieId] = rating;
+        localforage.setItem('user', state.user);
+      }
     }
   },
 });
 
-export const { setUser, clearUser, addFavorite, removeFavorite, addComment } = authSlice.actions;
+export const { setUser, clearUser, addFavorite, removeFavorite, addComment, addRating } = authSlice.actions;
 export default authSlice.reducer;

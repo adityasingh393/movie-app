@@ -2,8 +2,8 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/store';
-import { addFavorite, removeFavorite } from '../redux/slices/authSlice';
-import { Card, CardContent, CardMedia, Typography, IconButton, Grid, Box } from '@mui/material';
+import { addFavorite, removeFavorite, addRating } from '../redux/slices/authSlice';
+import { Card, CardContent, CardMedia, Typography, IconButton, Grid, Box, Rating } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import Comment from './Comment';
 
@@ -17,7 +17,7 @@ interface Movie {
   Year: string;
   imdbID: string;
   Poster: string;
-  Plot?: string; 
+  Plot?: string;
   Director: string;
   Actors: string;
   Released: string;
@@ -45,6 +45,12 @@ const MovieList: React.FC<MovieListProps> = ({ movies, searchTerm }) => {
     navigate(`/movie-details/${imdbID}`);
   };
 
+  const handleRatingChange = (imdbID: string, rating: number) => {
+    if (user) {
+      dispatch(addRating({ movieId: imdbID, rating }));
+    }
+  };
+
   const filteredMovies = movies.filter(movie =>
     movie.Title.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -59,8 +65,8 @@ const MovieList: React.FC<MovieListProps> = ({ movies, searchTerm }) => {
               alt={movie.Title}
               image={movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/150'}
               className="poster-container"
-              style={{ objectFit: 'contain', cursor: 'pointer' }} // Ensure full image is displayed and clickable
-              onClick={() => handlePosterClick(movie.imdbID)} // Navigate to MovieDetails on click
+              style={{ objectFit: 'contain', cursor: 'pointer' }}
+              onClick={() => handlePosterClick(movie.imdbID)}
             />
             <CardContent>
               <Typography variant="h6">{movie.Title}</Typography>
@@ -71,6 +77,12 @@ const MovieList: React.FC<MovieListProps> = ({ movies, searchTerm }) => {
               <Typography variant="body2" color="textSecondary">Released: {movie.Released}</Typography>
               <Typography variant="body2" color="textSecondary">Runtime: {movie.Runtime}</Typography>
               <Typography variant="body2" color="textSecondary">Rating: {movie.imdbRating}</Typography>
+              {user && (
+                <Rating
+                  value={user.ratings[movie.imdbID] || 0}
+                  onChange={(event, newValue) => handleRatingChange(movie.imdbID, newValue || 0)}
+                />
+              )}
             </CardContent>
             {user && (
               <Box display="flex" alignItems="center" justifyContent="space-between" padding="8px">

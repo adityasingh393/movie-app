@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import localforage from 'localforage';
 import { useNavigate } from 'react-router-dom';
-import * as Yup from 'yup'; // Import Yup
+import * as Yup from 'yup';
 
 interface SignupFormInputs {
   email: string;
@@ -13,6 +13,8 @@ interface User {
   email: string;
   password: string;
   favorites: string[];
+  comments: Record<string, Comment[]>;
+  ratings: Record<string, number>;
 }
 
 const SignupPage: React.FC = () => {
@@ -28,17 +30,21 @@ const SignupPage: React.FC = () => {
     try {
       await schema.validate(data);
 
-          const existingUser = await localforage.getItem<User>(data.email);
+      const existingUser = await localforage.getItem<User>(data.email);
       if (existingUser) {
         alert('User already exists');
       } else {
-        const newUser: User = { ...data, favorites: [] };
+        const newUser: User = {
+          ...data,
+          favorites: [],
+          comments: {},
+          ratings: {},
+        };
         await localforage.setItem(data.email, newUser);
         alert('Signup successful');
         navigate('/login');
       }
     } catch (error) {
-     
       console.error(error);
     }
   };
