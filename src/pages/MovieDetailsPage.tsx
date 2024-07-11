@@ -56,7 +56,7 @@ const MovieDetails: React.FC = () => {
             <Box marginTop={2}>
               <Rating
                 value={user.ratings[movie.imdbID] || 0}
-                onChange={(event, newValue) => handleRatingChange(newValue || 0)}
+                onChange={(event, newValue) =>{console.log(event);  handleRatingChange(newValue || 0)}}
               />
               <Box display="flex" flexDirection="column" marginTop={2}>
                 <TextField
