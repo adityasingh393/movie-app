@@ -19,7 +19,7 @@ interface User {
   ratings: Record<string, number>;
 }
 
-interface AuthState {
+export interface AuthState { // Ensure AuthState is exported
   user: User | null;
 }
 

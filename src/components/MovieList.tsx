@@ -5,7 +5,7 @@ import { RootState } from '../redux/store';
 import { addFavorite, removeFavorite, addRating } from '../redux/slices/authSlice';
 import { Card, CardContent, CardMedia, Typography, IconButton, Grid, Box, Rating } from '@mui/material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import Comment from './Comment';
+// import Comment from './Comment';
 
 interface MovieListProps {
   movies: Movie[];
@@ -77,12 +77,7 @@ const MovieList: React.FC<MovieListProps> = ({ movies, searchTerm }) => {
               <Typography variant="body2" color="textSecondary">Released: {movie.Released}</Typography>
               <Typography variant="body2" color="textSecondary">Runtime: {movie.Runtime}</Typography>
               <Typography variant="body2" color="textSecondary">Rating: {movie.imdbRating}</Typography>
-              {user && (
-                <Rating
-                  value={user.ratings[movie.imdbID] || 0}
-                  onChange={(event, newValue) => handleRatingChange(movie.imdbID, newValue || 0)}
-                />
-              )}
+              
             </CardContent>
             {user && (
               <Box display="flex" alignItems="center" justifyContent="space-between" padding="8px">
@@ -93,7 +88,7 @@ const MovieList: React.FC<MovieListProps> = ({ movies, searchTerm }) => {
                 >
                   <ThumbUpIcon color={user.favorites.includes(movie.imdbID) ? 'primary' : 'action'} />
                 </IconButton>
-                <Comment movieId={movie.imdbID} />
+                
               </Box>
             )}
           </Card>

@@ -1,14 +1,15 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { configureStore, combineReducers, Store } from '@reduxjs/toolkit';
 import movieReducer from './slices/movieSlice';
 import authReducer, { setUser } from './slices/authSlice';
 import { loadState, saveState } from '../utils/localforage';
+import { AuthState } from './slices/authSlice'; // Ensure AuthState is imported
 
 const rootReducer = combineReducers({
   movies: movieReducer,
   auth: authReducer,
 });
 
-const store = configureStore({
+const store: Store = configureStore({
   reducer: rootReducer,
 });
 
@@ -16,9 +17,14 @@ store.subscribe(() => {
   saveState('auth', store.getState().auth);
 });
 
+const isAuthState = (state: any): state is AuthState => {
+  return state && typeof state === 'object' && 'user' in state;
+};
+
 (async () => {
-  const authState = await loadState('auth');
-  if (authState) {
+  const loadedState = await loadState('auth');
+  const authState: AuthState | null = isAuthState(loadedState) ? loadedState : null;
+  if (authState && authState.user) {
     store.dispatch(setUser(authState.user));
   }
 })();

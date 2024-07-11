@@ -1,39 +1,46 @@
-body, html {
+body {
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif;
-  background-color: #f5f5f5;
+  box-sizing: border-box;
 }
 
-.navbar {
+
+.comment-container {
   display: flex;
-  align-items: center;
-  background-color: #3f51b5;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.comment-input {
   padding: 10px;
-  color: white;
-}
-
-.nav-button {
-  background: none;
-  border: none;
-  color: white;
-  margin-right: 20px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.nav-button:hover {
-  text-decoration: underline;
-}
-
-.search-input {
-  padding: 5px;
-  font-size: 16px;
   border-radius: 4px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  margin-right: 5px;
+  height: 60px;
+}
+
+.comment-button {
+  background-color: hsl(231, 48%, 48%);
+  color: white;
   border: none;
-  flex: 1;
-  max-width: 300px;
-  margin-left: auto;
+  border-radius: 4px;
+  padding: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.comment-button:disabled {
+  background-color: #ccc;
+}
+
+.comment-text {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f5f5f5;
 }
 
 .movie-card {
@@ -46,7 +53,7 @@ body, html {
 .poster-container {
   height: 300px;
   padding: 5px;
-  object-fit: contain; 
+  object-fit: contain;
 }
 
 .details-container {
@@ -65,29 +72,6 @@ body, html {
   margin-top: 10px;
 }
 
-.comment-input {
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
-  margin-right: 5px;
-  height: 60px; 
-}
-
-.comment-button {
-  background-color: hsl(231, 48%, 48%);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 5px;
-  cursor: pointer;
-  margin-top: 10px; 
-}
-
-.comment-button:disabled {
-  background-color: #ccc;
-}
-
 @media (max-width: 768px) {
   .movie-card {
     margin: 10px;
@@ -95,9 +79,4 @@ body, html {
   .details-container {
     padding: 10px;
   }
-}
-.login-singup{
-  align-items: center;
-  justify-content: center;
-  color:hsl(231, 48%, 48%);
 }

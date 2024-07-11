@@ -13,7 +13,7 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm }) => {
 
   const movies = useSelector((state: RootState) => state.movies.movies);
 
-  return <MovieList movies={movies} searchTerm={searchTerm} />;
+  return <MovieList movies={movies} searchTerm={searchTerm}/>;
 };
 
 export default HomePage;

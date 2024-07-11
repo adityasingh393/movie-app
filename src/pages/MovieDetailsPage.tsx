@@ -1,32 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../redux/store';
-import { Box, Card, CardContent, CardMedia, Typography } from '@mui/material';
-
-interface Movie {
-  Title: string;
-  Year: string;
-  imdbID: string;
-  Poster: string;
-  Plot?: string;
-  Director: string;
-  Actors: string;
-  Released: string;
-  Runtime: string;
-  Genre: string;
-  imdbRating: string;
-}
+import { Box, Card, CardContent, CardMedia, Typography, Rating, TextField, Button } from '@mui/material';
+import { addComment, addRating } from '../redux/slices/authSlice';
+import { Movie, Commenttype } from '../utils/types';
 
 const MovieDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const dispatch = useDispatch();
   const movie = useSelector((state: RootState) =>
     state.movies.movies.find((movie: Movie) => movie.imdbID === id)
   );
+  const user = useSelector((state: RootState) => state.auth.user);
+  const [comment, setComment] = useState('');
 
   if (!movie) {
     return <Typography variant="h5">Movie not found</Typography>;
   }
+
+  const handleCommentSubmit = () => {
+    if (user && comment.trim()) {
+      dispatch(addComment({ movieId: movie.imdbID, comment }));
+      setComment('');
+    }
+  };
+
+  const handleRatingChange = (newRating: number) => {
+    if (user) {
+      dispatch(addRating({ movieId: movie.imdbID, rating: newRating }));
+    }
+  };
 
   return (
     <Box display="flex" justifyContent="center" padding={2}>
@@ -47,6 +51,39 @@ const MovieDetails: React.FC = () => {
           <Typography variant="body2" color="textSecondary">Released: {movie.Released}</Typography>
           <Typography variant="body2" color="textSecondary">Runtime: {movie.Runtime}</Typography>
           <Typography variant="body2" color="textSecondary">Rating: {movie.imdbRating}</Typography>
+
+          {user && (
+            <Box marginTop={2}>
+              <Rating
+                value={user.ratings[movie.imdbID] || 0}
+                onChange={(event, newValue) => handleRatingChange(newValue || 0)}
+              />
+              <Box display="flex" flexDirection="column" marginTop={2}>
+                <TextField
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder="Add a comment"
+                  variant="outlined"
+                  multiline
+                  rows={4}
+                />
+                <Button
+                  onClick={handleCommentSubmit}
+                  variant="contained"
+                  color="primary"
+                  disabled={!comment.trim()}
+                  style={{ marginTop: '10px' }}
+                >
+                  Submit
+                </Button>
+              </Box>
+              {movie.imdbID in user.comments && user.comments[movie.imdbID].map((c: Commenttype, index: number) => (
+                <Box key={index} marginTop={2} padding={2} border={1} borderRadius={4} borderColor="grey.300">
+                  <Typography variant="body1">{c.text}</Typography>
+                </Box>
+              ))}
+            </Box>
+          )}
         </CardContent>
       </Card>
     </Box>
