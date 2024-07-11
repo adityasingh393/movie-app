@@ -2,7 +2,7 @@ import { configureStore, combineReducers, Store } from '@reduxjs/toolkit';
 import movieReducer from './slices/movieSlice';
 import authReducer, { setUser } from './slices/authSlice';
 import { loadState, saveState } from '../utils/localforage';
-import { AuthState } from './slices/authSlice'; // Ensure AuthState is imported
+import { AuthState } from './slices/authSlice'; 
 
 const rootReducer = combineReducers({
   movies: movieReducer,

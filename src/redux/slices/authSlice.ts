@@ -11,7 +11,7 @@ interface Rating {
   rating: number;
 }
 
-interface User {
+export interface User {
   email: string;
   password: string;
   favorites: string[];
@@ -19,7 +19,7 @@ interface User {
   ratings: Record<string, number>;
 }
 
-export interface AuthState { // Ensure AuthState is exported
+export interface AuthState {
   user: User | null;
 }
 

@@ -1,19 +1,13 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../redux/slices/authSlice';
+import { setUser, User } from '../redux/slices/authSlice'; 
 import localforage from 'localforage';
 import { useNavigate } from 'react-router-dom';
 
 interface LoginFormInputs {
   email: string;
   password: string;
-}
-
-interface User {
-  email: string;
-  password: string;
-  favorites: string[];
 }
 
 const LoginPage: React.FC = () => {
